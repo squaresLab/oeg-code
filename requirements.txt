@@ -1,0 +1,7 @@
+numpy
+scipy
+matplotlib
+setuptools
+Cython
+IPython
+gurobipy
