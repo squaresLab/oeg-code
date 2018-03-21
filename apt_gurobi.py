@@ -59,24 +59,37 @@ try:
     m = Model("mip1")
 
     # Create variables
-    p = [4]
-    p[0] = m.addVar(vtype=GRB.CONTINUOUS, name="a")
-    p[1] = m.addVar(vtype=GRB.CONTINUOUS, name="b")
-    p[2] = m.addVar(vtype=GRB.CONTINUOUS, name="c")
-    p[3] = m.addVar(vtype=GRB.CONTINUOUS, name="d")
+    # defenders actions
+    p = m.addVars(4, vtype=GRB.CONTINUOUS)
+    a = m.addVars(2, 2, vtype=GRB.BINARY)
 
     # Set objective
     obj = LinExpr();
 
-    obj += nation_prior * 
+    for d in range(4):
+        for a_index in range(2):
+            obj += nation_prior * payoff_defender(a_index+1, d+1, 1) * p[d] * a[0, a_index]
+            obj += criminal_prior * payoff_defender(a_index+1, d+1, 2) * p[d] * a[1, a_index]
 
     m.setObjective(obj, GRB.MAXIMIZE)
 
-    # Add constraint: x + 2 y + 3 z <= 4
-    m.addConstr(x + 2 * y + 3 * z <= 4, "c0")
+    # Add constraints
+    # defenders ps sum to 1
+    m.addConstr(p.sum() == 1)
+    # each attacker chooses one pure strategy
+    m.addConstrs(a.sum(i, '*') == 1 for i in range(2))
+    # each attacker type best responds to the defenders choices
+    # build payoff values for each attacker type and attacker choice
+    coeff = {(t, action): p.prod({d: payoff_attacker(action+1, d+1, t+1) for d in range(4)}) for action in range(2) for t in range(2)}
+    # alternative action for each attacker, bit flip
+    alt = {(t, action): p.prod({d: payoff_attacker(1-action+1, d+1, t+1) for d in range(4)}) for action in range(2) for t in range(2)}
+    # each attacker type best responds
+    constraintslhs = [a.prod(coeff, t, '*') for t in range(2)]
+    constraintsrhs = [a.prod(alt, t, '*') for t in range(2)]
 
-    # Add constraint: x + y >= 1
-    m.addConstr(x + y >= 1, "c1")
+    test = a.prod(coeff, 0, '*')
+
+    m.addConstrs(a.prod(coeff, t, '*') >= a.prod(alt, t, '*') for t in range(2))
 
     m.optimize()
 
@@ -84,8 +97,6 @@ try:
         print(v.varName, v.x)
 
     print('Obj:', m.objVal)
-
-    print(g)
 
     # for a in range(strategies_p1):
     #     for d in range(strategies_p2):
