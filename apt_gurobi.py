@@ -35,9 +35,24 @@ def payoff_attacker(a, d, t):
 
     return expected_time_in_system(a, d) * techniqueFit
 
+def defense_cost(a,d):
+    if d == 3:
+        return 2
+    elif d == 4:
+        return 1
+    elif d == 1:
+        if a == 1:
+            return 2
+        elif a == 2:
+            return A2_EXPOSE_CHANCE * 1 + (1-A2_EXPOSE_CHANCE)*2
+    elif d == 2:
+        if a == 2:
+            return 1
+        elif a ==1:
+            return A1_EXPOSE_CHANCE * 2 + (1-A2_EXPOSE_CHANCE)*1
 
 def payoff_defender(a, d, t):
-    return -payoff_attacker(a, d, t)
+    return -payoff_attacker(a, d, t)-0.5*defense_cost(a,d)
 
 try:
 
