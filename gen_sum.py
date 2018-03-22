@@ -113,4 +113,4 @@ for a1 in range(2):
 g
 s = gambit.nash.ExternalEnumMixedSolver()
 
-print(s.solve(g))
+print(s.solve(g)[0].payoff(1))
