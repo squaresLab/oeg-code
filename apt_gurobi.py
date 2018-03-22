@@ -99,10 +99,6 @@ try:
     # alternative action for each attacker, bit flip
     alt = {(t, action): p.prod({d: payoff_attacker(1-action+1, d+1, t+1) for d in range(4)}) for action in range(2) for t in range(2)}
     # each attacker type best responds
-    constraintslhs = [a.prod(coeff, t, '*') for t in range(2)]
-    constraintsrhs = [a.prod(alt, t, '*') for t in range(2)]
-
-    test = a.prod(coeff, 0, '*')
 
     m.addConstrs(a.prod(coeff, t, '*') >= a.prod(alt, t, '*') for t in range(2))
 
