@@ -10,6 +10,7 @@ try:
     y = m.addVar(vtype=GRB.BINARY, name="y")
     z = m.addVar(vtype=GRB.BINARY, name="z")
 
+
     # Set objective
     m.setObjective(x + y + 2 * z, GRB.MAXIMIZE)
 

@@ -19,8 +19,8 @@ A2_EXPOSE_CHANCE = 0.9
 
 WRONG_PENALTY = 1
 
-T1_PRIOR = 0.9
-T2_PRIOR = 0.1
+T1_PRIOR = 0.1
+T2_PRIOR = 0.9
 
 
 def expected_time_in_system(a, d):

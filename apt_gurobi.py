@@ -67,8 +67,8 @@ try:
 
     criminal = [[payoff_attacker(a+1, d+1, type) for d in range(strategies_p2)] for a in range(strategies_p1)]
 
-    nation_prior = 0.5
-    criminal_prior = 0.5
+    nation_prior = 0.1
+    criminal_prior = 0.9
 
     # Create a new model
     m = Model("mip1")

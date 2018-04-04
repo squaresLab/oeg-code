@@ -78,7 +78,7 @@ def payoff_defender(a, d, t):
 
     return -payoff_attacker(a,d,t)*t-0.5*defense_cost(a,d)
 
-type = 1
+type = 2
 
 for a in range(strategies_p1):
     for d in range(strategies_p2):
@@ -86,7 +86,7 @@ for a in range(strategies_p1):
         pd = payoff_defender(a+1, d+1, type)
         g[a, d][0] = Decimal(pa)
         g[a, d][1] = Decimal(pd)
-
+        print("a: "+str(a)+" d: "+str(d) + " " + str(pa) + " , " + str(pd))
 s = gambit.nash.ExternalEnumMixedSolver()
 
 
