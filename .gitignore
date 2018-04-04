@@ -1,0 +1,5 @@
+*.swp
+venv/
+venv1/
+*.log
+.idea/
