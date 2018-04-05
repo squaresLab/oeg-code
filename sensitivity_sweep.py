@@ -1,15 +1,31 @@
+from gurobi_stackelberg_equilibrium_solver import get_stackelberg
 from harsanyi_nash_equilibrium_solver import get_solution, strategies_p1, strategies_p2
 
-print("t1_prior,11,12,21,22,we1,we2,e1,e2,payoff")
+print("t1_prior,equilibrium,11,12,21,22,we1,we2,e1,e2,payoff")
 
 for x in range(101):
     t1 = x/100.0
     solution = get_solution(t1)
 
-    line = str(t1) + ","
+    m = get_stackelberg(t1, False)
+    ans = [v.x for v in m.getVars()]
+    ans.append(m.objVal)
+
+    linen = str(t1) + ",nash,"
+    lines = str(t1) + ",stackelberg,"
     for x in range(strategies_p1 + strategies_p2):
-        line += str(solution[x]) + ","
+        linen += str(solution[x]) + ","
+        s = x
+        if 0 <= s < 4:
+            s += 4
+        elif 3 < s < 8:
+            s -= 4
+        lines += str(ans[s]) + ","
 
-    line += str(solution.payoff(1))
+    linen += str(solution.payoff(1))
+    lines += str(ans[strategies_p1 + strategies_p2])
 
-    print(line)
+    print(linen)
+    print(lines)
+
+
