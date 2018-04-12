@@ -1,18 +1,18 @@
 library(readr)
-library(reshape)
+library(reshape2)
 library(ggplot2)
 
 nashsweep <- read_csv("PycharmProjects/apt/nashsweep.csv")
 
-bothsweep <- read_csv("~/PycharmProjects/apt-code/bothsweep.csv")
+bothsweep <- read_csv("~/PycharmProjects/apt/bothsweep.csv")
 
 sweep <- bothsweep
 
 sweeps <- subset(sweep,equilibrium == "nash")
-title <- "Nash"
+title <- "Nash Equilibrium"
 
 sweeps <- subset(sweep,equilibrium != "nash")
-title <- "Stackelberg"
+title <- "Stackelberg Equilibrium"
 
 sweeps <- as.data.frame(sweeps)
 
@@ -21,7 +21,7 @@ ggplot(mdata, aes(variable,t1_prior, fill = value)) + geom_raster() + ggtitle(ti
 
 attacker = subset(mdata,variable %in% c("11","12","21","22"))
 defender = subset(mdata,!variable %in% c("11","12","21","22"))
-ggplot(attacker, aes(variable,t1_prior, fill = value)) + geom_raster() + ggtitle(title)
-ggplot(defender, aes(variable,t1_prior, fill = value)) + geom_raster() + ggtitle(title)
+ggplot(attacker, aes(variable,t1_prior, fill = value)) + geom_raster() +  xlab("Attacker's Action") + ylab("Prior Probability of Attacker Type 1") + labs(fill='Action \nProbability') 
+ggplot(defender, aes(variable,t1_prior, fill = value)) + geom_raster() + xlab("Defender's Action") + ylab("Prior Probability of Attacker Type 1") + labs(fill='Action \nProbability')
 
 (p <- ggplot(mdata, aes(variable, t1_prior)) + geom_tile(aes(fill = value), colour = "white") + scale_fill_gradient(low = "white",high = "steelblue") + ggtitle(title))
