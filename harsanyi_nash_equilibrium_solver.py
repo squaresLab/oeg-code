@@ -8,7 +8,7 @@ strategies_p1 = 4
 strategies_p2 = 4
 
 
-def get_solution(p_t1):
+def get_solution(p_t1,ttp1_obs=0.1,ttp2_obs=0.9):
 
     t1_prior = p_t1
     t2_prior = 1 - p_t1
@@ -20,7 +20,7 @@ def get_solution(p_t1):
     g.players[0].label = "Attacker"
     g.players[1].label = "Defender"
 
-    model = ModelGenSum()
+    model = ModelGenSum(ttp1_obs,ttp2_obs)
 
     a = 0
     for a1 in range(2):
@@ -38,7 +38,7 @@ def get_solution(p_t1):
     return solution
 
 
-def getMixedStrategyProfile(p_t1):
+def getMixedStrategyProfile(p_t1,ttp1_obs=0.1,ttp2_obs=0.9):
     t1_prior = p_t1
     t2_prior = 1 - p_t1
 
@@ -49,7 +49,7 @@ def getMixedStrategyProfile(p_t1):
     g.players[0].label = "Attacker"
     g.players[1].label = "Defender"
 
-    model = ModelGenSum()
+    model = ModelGenSum(ttp1_obs,ttp2_obs)
 
     a = 0
     for a1 in range(2):

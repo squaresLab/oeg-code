@@ -3,8 +3,8 @@ from gurobipy import *
 from model_gen_sum import ModelGenSum
 
 
-def get_attacker_br(t1_prior,debug,dp):
-    model = ModelGenSum()
+def get_attacker_br(t1_prior,debug,dp,ttp1_obs=0.1,ttp2_obs=0.9):
+    model = ModelGenSum(ttp1_obs,ttp2_obs)
 
     try:
 
@@ -61,9 +61,9 @@ def get_attacker_br(t1_prior,debug,dp):
         print('Error reported')
 
 
-def get_stackelberg(t1_prior, debug):
+def get_stackelberg(t1_prior, debug, ttp1_obs=0.1, ttp2_obs=0.9):
 
-    model = ModelGenSum()
+    model = ModelGenSum(ttp1_obs,ttp2_obs)
 
     try:
 

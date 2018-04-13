@@ -1,8 +1,8 @@
 class ModelZeroSum:
 
-    def __init__(self):
-        self.a1_observed_chance = 0.1
-        self.a2_observed_chance = 0.9
+    def __init__(self, ttp1_obs=0.1, ttp2_obs=0.9):
+        self.a1_observed_chance = ttp1_obs
+        self.a2_observed_chance = ttp2_obs
         self.failed_eviction_penalty = 1
 
     def expected_time_in_system(self, a, d):
