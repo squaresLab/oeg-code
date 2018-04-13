@@ -2,7 +2,7 @@ import gambit
 from math import ceil
 from decimal import *
 
-from model_zero_sum import ModelZeroSum
+from model_gen_sum import ModelGenSum
 
 strategies_p1 = 4
 strategies_p2 = 4
@@ -20,7 +20,7 @@ def get_solution(p_t1):
     g.players[0].label = "Attacker"
     g.players[1].label = "Defender"
 
-    model = ModelZeroSum()
+    model = ModelGenSum()
 
     a = 0
     for a1 in range(2):
@@ -36,6 +36,37 @@ def get_solution(p_t1):
 
     solution = s.solve(g)[0]
     return solution
+
+
+def getMixedStrategyProfile(p_t1):
+    t1_prior = p_t1
+    t2_prior = 1 - p_t1
+
+    g = gambit.Game.new_table([strategies_p1, strategies_p2])
+
+    g.title = "APT Observability"
+
+    g.players[0].label = "Attacker"
+    g.players[1].label = "Defender"
+
+    model = ModelGenSum()
+
+    a = 0
+    for a1 in range(2):
+        for a2 in range(2):
+            for d in range(strategies_p2):
+                pa = t1_prior * model.payoff_attacker(a1 + 1, d + 1, 1) + t2_prior * model.payoff_attacker(a2 + 1,
+                                                                                                           d + 1, 2)
+                pd = t1_prior * model.payoff_defender(a1 + 1, d + 1, 1) + t2_prior * model.payoff_defender(a2 + 1,
+                                                                                                           d + 1, 2)
+                g[a, d][0] = Decimal(pa)
+                g[a, d][1] = Decimal(pd)
+            a += 1
+
+    s = gambit.nash.ExternalEnumMixedSolver()
+
+    return g.mixed_strategy_profile()
+
 
 
 def main():
