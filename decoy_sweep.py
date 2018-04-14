@@ -5,8 +5,8 @@ print("t1_prior,equilibrium,decoys,11,12,21,22,we1,we2,e1,e2,payoff,uniform")
 
 decoy_cost = 0.0065
 
-for x in range(21):
-    t1 = x/20.0
+for x in range(101):
+    t1 = x/100.0
     best_nash = get_solution(t1), 0
     best_stack = get_stackelberg(t1, False), 0
     for o in range(18):
