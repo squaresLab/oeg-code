@@ -5,7 +5,8 @@ library(plyr)
 
 nashsweep <- read_csv("PycharmProjects/apt/nashsweep.csv")
 
-bothsweep <- read_csv("~/PycharmProjects/apt-code/bothsweep.csv")
+bothsweep <- read_csv("~/PycharmProjects/apt/bothsweep.csv")
+decoysweep <- read_csv("~/PycharmProjects/apt/decoysweep.csv")
 
 sweep <- bothsweep
 
@@ -38,8 +39,14 @@ ggplot(defender, aes(variable,t1_prior, fill = value)) + geom_raster() + xlab("D
 diff = data.frame(bothsweep$t1_prior,bothsweep$equilibrium,decoysweep$decoys,decoysweep$payoff-bothsweep$payoff, decoysweep$`11`-bothsweep$`11`,decoysweep$`12`-bothsweep$`12`,decoysweep$`21`-bothsweep$`21`,decoysweep$`22`-bothsweep$`22`, decoysweep$we1-bothsweep$we1,decoysweep$we2-bothsweep$we2,decoysweep$e1-bothsweep$e1,decoysweep$`e2`-bothsweep$`e2`)
 
 p <- ggplot(diff, aes(x=bothsweep.t1_prior,y=decoysweep.payoff...bothsweep.payoff,group=bothsweep.equilibrium))
-p + geom_line(aes(linetype=bothsweep.equilibrium)) + theme_bw() + ylab("Defender's Utility") + xlab("Prior Probability of Attacker Type 1")
+p + geom_line(aes(linetype=bothsweep.equilibrium)) + theme_bw() + ylab("Delta Defender's Utility") + xlab("Prior Probability of Attacker Type 1") + scale_linetype_discrete(name="Equilibrium")
+
+p <- ggplot(decoysweep, aes(x=t1_prior,y=decoys,group=equilibrium))
+p + geom_line(aes(linetype=equilibrium)) + theme_bw() + ylab("Optimal Number of Decoys") + xlab("Prior Probability of Attacker Type 1") + scale_linetype_discrete(name="Equilibrium")
 
 mdata <- melt(diff,id=c("bothsweep.t1_prior","decoysweep.payoff...bothsweep.payoff","bothsweep.equilibrium","decoysweep.decoys"))
-ggplot(mdata, aes(variable,bothsweep.t1_prior, fill = value)) + geom_raster() + ggtitle(title)
+
+mdata$variable <- revalue(mdata$variable,c("decoysweep..11....bothsweep..11."="11","decoysweep..12....bothsweep..12."="12","decoysweep.we1...bothsweep.we1"="we1","decoysweep..22....bothsweep..22."="22","decoysweep..21....bothsweep..21."="21","decoysweep.we2...bothsweep.we2"="we2","decoysweep.e1...bothsweep.e1"="e1","decoysweep.e2...bothsweep.e2"="e2"))
+
+ggplot(subset(mdata,bothsweep.equilibrium!="nash"), aes(variable,bothsweep.t1_prior, fill = value)) + geom_raster() + ggtitle("Strategy Change With Optimal System Design") + scale_fill_gradient2() + xlab("Action") + ylab("Prior Probability of Attacker Type 1") +  labs(fill='Delta\nAction \nProbability')
 
