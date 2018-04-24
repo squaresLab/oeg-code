@@ -3,10 +3,10 @@ library(reshape2)
 library(ggplot2)
 library(plyr)
 
-nashsweep <- read_csv("PycharmProjects/apt/nashsweep.csv")
+nashsweep <- read_csv("PycharmProjects/apt-code/nashsweep.csv")
 
-bothsweep <- read_csv("~/PycharmProjects/apt/bothsweep.csv")
-decoysweep <- read_csv("~/PycharmProjects/apt/decoysweep.csv")
+bothsweep <- read_csv("~/PycharmProjects/apt-code/bothsweep.csv")
+decoysweep <- read_csv("~/PycharmProjects/apt-code/decoysweep.csv")
 
 sweep <- bothsweep
 
@@ -48,5 +48,6 @@ mdata <- melt(diff,id=c("bothsweep.t1_prior","decoysweep.payoff...bothsweep.payo
 
 mdata$variable <- revalue(mdata$variable,c("decoysweep..11....bothsweep..11."="11","decoysweep..12....bothsweep..12."="12","decoysweep.we1...bothsweep.we1"="we1","decoysweep..22....bothsweep..22."="22","decoysweep..21....bothsweep..21."="21","decoysweep.we2...bothsweep.we2"="we2","decoysweep.e1...bothsweep.e1"="e1","decoysweep.e2...bothsweep.e2"="e2"))
 
-ggplot(subset(mdata,bothsweep.equilibrium!="nash"), aes(variable,bothsweep.t1_prior, fill = value)) + geom_raster() + ggtitle("Strategy Change With Optimal System Design") + scale_fill_gradient2() + xlab("Action") + ylab("Prior Probability of Attacker Type 1") +  labs(fill='Delta\nAction \nProbability')
-
+p <-ggplot(subset(mdata,bothsweep.equilibrium=="nash"), aes(variable,bothsweep.t1_prior, fill = value)) + geom_raster() + ggtitle("Strategy Change with Optimal Design NE") + xlab("Action") + ylab("Prior Probability of Attacker Type 1") +  labs(fill='Delta\nAction \nProbability')
+p + scale_fill_distiller(type="div", limits=c(-1,1), palette="PuOr", values = c(0.0,1.0))
+p + scale_fill_gradient2(high="#f1a340",low="#998ec3")
