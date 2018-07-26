@@ -1,0 +1,49 @@
+class ModelExtended:
+
+    def __init__(self, ttp1_obs=0.1, ttp2_obs=0.9, ttp3_obs=0.5):
+        self.a1_observed_chance = ttp1_obs
+        self.a2_observed_chance = ttp2_obs
+        self.a3_observed_chance = ttp3_obs
+        self.failed_eviction_penalty = 1
+
+    def expected_time_in_system(self, a, wait, blind_evict):
+
+
+
+        if a == 1:
+            if d == 1:
+                return 1
+            elif d == 2:
+                return 1 + (1 - self.a1_observed_chance) * (1 + self.failed_eviction_penalty)
+            elif d == 3:
+                return 0
+            elif d == 4:
+                return 2 + self.failed_eviction_penalty
+        elif a == 2:
+            if d == 1:
+                return 1 + (1 - self.a2_observed_chance) * (1 + self.failed_eviction_penalty)
+            elif d == 2:
+                return 1
+            elif d == 3:
+                return 2 + self.failed_eviction_penalty
+            elif d == 4:
+                return 0
+        elif a == 3:
+            if d == 1
+
+
+    def adjusted_system_time(self, a, d, t):
+        technique_fit = 1
+
+        if a != t:
+                technique_fit *= 0.5
+
+        return self.expected_time_in_system(a, d) * technique_fit
+
+    def payoff_attacker(self, a, d, t):
+
+        return self.adjusted_system_time(a, d, t)
+
+    def payoff_defender(self, a, d, t):
+
+        return -self.payoff_attacker(a, d, t)
