@@ -1,35 +1,28 @@
 class ModelExtended:
 
     def __init__(self, ttp1_obs=0.1, ttp2_obs=0.9, ttp3_obs=0.5):
-        self.a1_observed_chance = ttp1_obs
-        self.a2_observed_chance = ttp2_obs
-        self.a3_observed_chance = ttp3_obs
+        self.a_observed_chance = [ttp1_obs, ttp2_obs, ttp3_obs]
         self.failed_eviction_penalty = 1
 
     def expected_time_in_system(self, a, wait, blind_evict):
 
+        # sum over each timestep
+        timesteps = wait + 1
 
+        expected_time = 0
 
-        if a == 1:
-            if d == 1:
-                return 1
-            elif d == 2:
-                return 1 + (1 - self.a1_observed_chance) * (1 + self.failed_eviction_penalty)
-            elif d == 3:
-                return 0
-            elif d == 4:
-                return 2 + self.failed_eviction_penalty
-        elif a == 2:
-            if d == 1:
-                return 1 + (1 - self.a2_observed_chance) * (1 + self.failed_eviction_penalty)
-            elif d == 2:
-                return 1
-            elif d == 3:
-                return 2 + self.failed_eviction_penalty
-            elif d == 4:
-                return 0
-        elif a == 3:
-            if d == 1
+        hidden_chance = 1 - self.a_observed_chance[a + 1]
+
+        for t in range(timesteps):
+            expected_time += hidden_chance ** t
+
+        # chance that we reach the blind eviction
+        blind_evict_reached = hidden_chance ** (timesteps + 1)
+
+        if blind_evict != a:
+            expected_time += blind_evict_reached * (1 + self.failed_eviction_penalty)
+
+        return expected_time
 
 
     def adjusted_system_time(self, a, d, t):
