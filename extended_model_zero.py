@@ -11,7 +11,7 @@ class ModelExtended:
 
         expected_time = 0
 
-        hidden_chance = 1 - self.a_observed_chance[a + 1]
+        hidden_chance = 1 - self.a_observed_chance[a - 1]
 
         for t in range(timesteps):
             expected_time += hidden_chance ** t
@@ -24,19 +24,18 @@ class ModelExtended:
 
         return expected_time
 
-
-    def adjusted_system_time(self, a, d, t):
+    def adjusted_system_time(self, a, wait, blind_evict, t):
         technique_fit = 1
 
         if a != t:
                 technique_fit *= 0.5
 
-        return self.expected_time_in_system(a, d) * technique_fit
+        return self.expected_time_in_system(a, wait, blind_evict) * technique_fit
 
-    def payoff_attacker(self, a, d, t):
+    def payoff_attacker(self, a, wait, blind_evict, t):
 
-        return self.adjusted_system_time(a, d, t)
+        return self.adjusted_system_time(a, wait, blind_evict, t)
 
-    def payoff_defender(self, a, d, t):
+    def payoff_defender(self, a, wait, blind_evict, t):
 
-        return -self.payoff_attacker(a, d, t)
+        return -self.payoff_attacker(a, wait, blind_evict, t)
