@@ -4,7 +4,7 @@ from extended_model_zero import ModelExtended
 class ModelExtendedGen(ModelExtended):
 
     def __init__(self, *args, **kwargs):
-        super(self.__class__, self).__init__(*args, **kwargs)
+        super(ModelExtendedGen, self).__init__(*args, **kwargs)
         self.a_evict_cost = [2, 1, 1.5]
 
     def defense_cost(self, a, wait, blind_evict):

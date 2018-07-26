@@ -1,4 +1,4 @@
-class ModelExtended:
+class ModelExtended(object):
 
     def __init__(self, ttp1_obs=0.1, ttp2_obs=0.9, ttp3_obs=0.5):
         self.a_observed_chance = [ttp1_obs, ttp2_obs, ttp3_obs]

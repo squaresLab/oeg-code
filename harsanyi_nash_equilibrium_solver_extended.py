@@ -4,7 +4,7 @@ from decimal import *
 
 from extended_model_gen import ModelExtendedGen
 
-strategies_p1 = 9
+strategies_p1 = 3**3
 strategies_p2 = 2*3+3
 
 
