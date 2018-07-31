@@ -29,3 +29,9 @@ class ModelExtendedGen(ModelExtended):
     def payoff_defender(self, a, wait, blind_evict, t):
 
         return -self.payoff_attacker(a, wait, blind_evict, t)*t-0.5*self.defense_cost(a, wait, blind_evict)
+
+    def payoff_defender_single_defender_arg(self, a, d, t):
+        num_ttps = 3
+        wait = d / num_ttps
+        blind_evict = d % num_ttps + 1
+        return self.payoff_defender(a, wait, blind_evict, t)
