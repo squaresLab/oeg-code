@@ -5,14 +5,14 @@ from decimal import *
 from extended_model_gen import ModelExtendedGen
 
 strategies_p1 = 3**3
-strategies_p2 = 2*3+3
+strategies_p2 = 3*3
 
 
-def get_solution(p_t1,ttp1_obs=0.1,ttp2_obs=0.9,ttp3_obs=0.5):
+def get_solution(p_t1=0.33, p_t2=0.33, p_t3=0.33, ttp1_obs=0.1, ttp2_obs=0.9, ttp3_obs=0.5):
 
-    t1_prior = 0.33
-    t2_prior = 0.33
-    t3_prior = 0.33
+    t1_prior = p_t1
+    t2_prior = p_t2
+    t3_prior = p_t3
 
     g = gambit.Game.new_table([strategies_p1, strategies_p2])
 
@@ -21,7 +21,7 @@ def get_solution(p_t1,ttp1_obs=0.1,ttp2_obs=0.9,ttp3_obs=0.5):
     g.players[0].label = "Attacker"
     g.players[1].label = "Defender"
 
-    model = ModelExtendedGen(ttp1_obs,ttp2_obs,ttp3_obs)
+    model = ModelExtendedGen(ttp1_obs, ttp2_obs, ttp3_obs)
 
     a = 0
     for a1 in range(3):
@@ -74,7 +74,7 @@ def getMixedStrategyProfile(p_t1,ttp1_obs=0.1, ttp2_obs=0.9, ttp3_obs=0.5):
 
 def main():
 
-    solution = get_solution(0.5)
+    solution = get_solution()
 
     line = ""
     for x in range(strategies_p1 + strategies_p2):
@@ -84,6 +84,7 @@ def main():
 
     print(line)
     print(solution)
+    print(solution.payoff(1))
 
 
 if __name__ == "__main__":
