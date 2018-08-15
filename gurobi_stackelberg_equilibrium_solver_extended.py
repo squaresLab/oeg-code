@@ -62,22 +62,22 @@ def get_attacker_br(t1_prior,debug,dp,ttp1_obs=0.1,ttp2_obs=0.9):
         print('Error reported')
 
 
-def get_stackelberg(t1_prior, debug, ttp1_obs=0.1, ttp2_obs=0.9, ttp3_obs=0.5):
+def get_stackelberg(t1_prior=0.33, t2_prior=0.33, t3_prior=0.33, debug=False, ttp1_obs=0.1, ttp2_obs=0.9, ttp3_obs=0.5):
 
     model = ModelExtendedGen(ttp1_obs, ttp2_obs, ttp3_obs)
 
     try:
 
         num_attackers = 3
-        timesteps = 2
+        timesteps = 3
         num_ttps = 3
 
         strategies_p1 = num_ttps**num_attackers
-        strategies_p2 = (timesteps+1)*num_ttps
+        strategies_p2 = timesteps*num_ttps
 
-        nation_prior = 0.33
-        criminal_prior = 0.33
-        terrorist_prior = 0.33
+        nation_prior = t1_prior
+        criminal_prior = t2_prior
+        terrorist_prior = t3_prior
 
         # Create a new model
         m = Model("mip1")
@@ -87,13 +87,13 @@ def get_stackelberg(t1_prior, debug, ttp1_obs=0.1, ttp2_obs=0.9, ttp3_obs=0.5):
         # Create variables
         # defenders actions
         p = m.addVars(strategies_p2, vtype=GRB.CONTINUOUS)
-        a = m.addVars(num_ttps, num_ttps, vtype=GRB.BINARY)
+        a = m.addVars(num_attackers, num_ttps, vtype=GRB.BINARY)
 
         # Set objective
         obj = LinExpr()
 
         for d in range(strategies_p2):
-            for a_index in range(num_attackers):
+            for a_index in range(num_ttps):
                 obj += nation_prior * model.payoff_defender_single_defender_arg(a_index+1, d, 1) * p[d] * a[0, a_index]
                 obj += criminal_prior * model.payoff_defender_single_defender_arg(a_index+1, d, 2) * p[d] * a[1, a_index]
                 obj += terrorist_prior * model.payoff_defender_single_defender_arg(a_index+1, d, 3) * p[d] * a[2, a_index]
@@ -107,12 +107,12 @@ def get_stackelberg(t1_prior, debug, ttp1_obs=0.1, ttp2_obs=0.9, ttp3_obs=0.5):
         m.addConstrs(a.sum(i, '*') == 1 for i in range(num_attackers))
         # each attacker type best responds to the defenders choices
         # build payoff values for each attacker type and attacker choice
-        coeff = {(t, action): p.prod({d: model.payoff_attacker(action+1, d/3, (d % 3)+1, t+1) for d in range(strategies_p2)})
+        coeff = {(t, action): p.prod({d: model.payoff_attacker(action+1, d/num_ttps, (d % num_ttps)+1, t+1) for d in range(strategies_p2)})
                  for action in range(num_ttps) for t in range(num_attackers)}
 
         # for each possible action, check that the chosen action is >= (i.e., that the attacker best responds)
-        m.addConstrs(a.prod(coeff, t, '*') >= model.payoff_attacker(action+1, d/3, (d % 3)+1, t+1)
-                     for action in range(num_ttps) for d in range(strategies_p2) for t in range(num_attackers))
+        m.addConstrs(a.prod(coeff, t, '*') >= coeff[(t, action)]
+                     for action in range(num_ttps) for t in range(num_attackers))
 
         m.optimize()
 
@@ -123,7 +123,7 @@ def get_stackelberg(t1_prior, debug, ttp1_obs=0.1, ttp2_obs=0.9, ttp3_obs=0.5):
 
 def main():
 
-    m = get_stackelberg(0.5, True)
+    m = get_stackelberg(debug=True)
 
     for v in m.getVars():
         print(v.varName, v.x)
