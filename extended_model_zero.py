@@ -2,7 +2,7 @@ class ModelExtended(object):
 
     def __init__(self, ttp1_obs=0.1, ttp2_obs=0.9, ttp3_obs=0.5):
         self.a_observed_chance = [ttp1_obs, ttp2_obs, ttp3_obs]
-        self.failed_eviction_penalty = 1
+        self.failed_eviction_timesteps = 3
 
     def expected_time_in_system(self, a, wait, blind_evict):
 
@@ -17,10 +17,10 @@ class ModelExtended(object):
             expected_time += hidden_chance ** t
 
         # chance that we reach the blind eviction
-        blind_evict_reached = hidden_chance ** (timesteps + 1)
+        blind_evict_reached = hidden_chance ** wait
 
         if blind_evict != a:
-            expected_time += blind_evict_reached * (1 + self.failed_eviction_penalty)
+            expected_time += blind_evict_reached * (self.failed_eviction_timesteps - timesteps)
 
         return expected_time
 
