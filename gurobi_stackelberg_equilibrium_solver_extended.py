@@ -4,7 +4,7 @@ from extended_model_gen import ModelExtendedGen
 
 
 def get_attacker_br(dp, timesteps=3, p_t1=0.33, p_t2=0.33, p_t3=0.33,debug=True,ttp1_obs=0.1,ttp2_obs=0.9,ttp3_obs=0.5):
-    model = ModelExtendedGen(ttp1_obs,ttp2_obs,ttp3_obs)
+    model = ModelExtendedGen(ttp1_obs,ttp2_obs,ttp3_obs,horizon=timesteps)
 
     try:
 
@@ -71,7 +71,7 @@ def get_attacker_br(dp, timesteps=3, p_t1=0.33, p_t2=0.33, p_t3=0.33,debug=True,
 
 def get_stackelberg(timesteps=3, t1_prior=0.33, t2_prior=0.33, t3_prior=0.33, debug=False, ttp1_obs=0.1, ttp2_obs=0.9, ttp3_obs=0.5):
 
-    model = ModelExtendedGen(ttp1_obs, ttp2_obs, ttp3_obs)
+    model = ModelExtendedGen(ttp1_obs, ttp2_obs, ttp3_obs, horizon=timesteps)
 
     try:
 

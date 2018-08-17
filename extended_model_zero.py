@@ -1,8 +1,8 @@
 class ModelExtended(object):
 
-    def __init__(self, ttp1_obs=0.1, ttp2_obs=0.9, ttp3_obs=0.5):
+    def __init__(self, ttp1_obs=0.1, ttp2_obs=0.9, ttp3_obs=0.5, horizon=3):
         self.a_observed_chance = [ttp1_obs, ttp2_obs, ttp3_obs]
-        self.failed_eviction_timesteps = 3
+        self.failed_eviction_timesteps = horizon
 
     def expected_time_in_system(self, a, wait, blind_evict):
 

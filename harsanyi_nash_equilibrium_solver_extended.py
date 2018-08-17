@@ -23,7 +23,7 @@ def get_solution(timesteps=3, p_t1=0.33, p_t2=0.33, p_t3=0.33, ttp1_obs=0.1, ttp
     g.players[0].label = "Attacker"
     g.players[1].label = "Defender"
 
-    model = ModelExtendedGen(ttp1_obs, ttp2_obs, ttp3_obs)
+    model = ModelExtendedGen(ttp1_obs, ttp2_obs, ttp3_obs,horizon=timesteps)
 
     a = 0
     for a1 in range(3):
