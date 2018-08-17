@@ -1,16 +1,14 @@
 from gurobipy import *
 
 from extended_model_gen import ModelExtendedGen
-from model_gen_sum import ModelGenSum
 
 
-def get_attacker_br(timesteps=3, p_t1=0.33, p_t2=0.33, p_t3=0.33,debug=True,dp,ttp1_obs=0.1,ttp2_obs=0.9,ttp3_obs=0.5):
-    model = ModelGenSum(ttp1_obs,ttp2_obs)
+def get_attacker_br(dp, timesteps=3, p_t1=0.33, p_t2=0.33, p_t3=0.33,debug=True,ttp1_obs=0.1,ttp2_obs=0.9,ttp3_obs=0.5):
+    model = ModelExtendedGen(ttp1_obs,ttp2_obs,ttp3_obs)
 
     try:
 
         num_attackers = 3
-        timesteps = 3
         num_ttps = 3
 
         strategies_p1 = num_ttps**num_attackers
@@ -61,7 +59,7 @@ def get_attacker_br(timesteps=3, p_t1=0.33, p_t2=0.33, p_t3=0.33,debug=True,dp,t
                      for action in range(num_ttps) for t in range(num_attackers))
 
         # constrain the defender to the specified strategy
-        m.addConstrs(p[x] == dp[x] for x in range(4))
+        m.addConstrs(p[x] == dp[x] for x in range(strategies_p2))
 
         m.optimize()
 
