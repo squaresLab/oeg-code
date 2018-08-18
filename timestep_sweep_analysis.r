@@ -7,4 +7,4 @@ g<- ggplot(prelim, aes(x=X1, y=X4, group=X2)) +
   geom_line(aes(linetype=X2)) 
   #geom_point(aes(shape=X2))
   
-g + theme_bw() + xlab("Number of Timesteps") + ylab("Time in Secconds") + labs(linetype="Game Type")
+g + theme_bw() + xlab("Number of Timesteps") + ylab("Time in Seconds") + labs(linetype="Game Type")
