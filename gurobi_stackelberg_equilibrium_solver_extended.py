@@ -50,7 +50,7 @@ def get_attacker_br(dp, timesteps=3, p_t1=0.33, p_t2=0.33, p_t3=0.33,debug=True,
         # each attacker type best responds to the defenders choices
         # build payoff values for each attacker type and attacker choice
         coeff = {(t, action): p.prod(
-            {d: model.payoff_attacker(action + 1, d / num_ttps, (d % num_ttps) + 1, t + 1) for d in
+            {d: model.payoff_attacker(action + 1, d // num_ttps, (d % num_ttps) + 1, t + 1) for d in
              range(strategies_p2)})
                  for action in range(num_ttps) for t in range(num_attackers)}
 
@@ -70,7 +70,6 @@ def get_attacker_br(dp, timesteps=3, p_t1=0.33, p_t2=0.33, p_t3=0.33,debug=True,
 
 
 def get_stackelberg(timesteps=3, t1_prior=0.33, t2_prior=0.33, t3_prior=0.33, debug=False, ttp1_obs=0.1, ttp2_obs=0.9, ttp3_obs=0.5):
-
     model = ModelExtendedGen(ttp1_obs, ttp2_obs, ttp3_obs, horizon=timesteps)
 
     try:
@@ -113,7 +112,7 @@ def get_stackelberg(timesteps=3, t1_prior=0.33, t2_prior=0.33, t3_prior=0.33, de
         m.addConstrs(a.sum(i, '*') == 1 for i in range(num_attackers))
         # each attacker type best responds to the defenders choices
         # build payoff values for each attacker type and attacker choice
-        coeff = {(t, action): p.prod({d: model.payoff_attacker(action+1, d/num_ttps, (d % num_ttps)+1, t+1) for d in range(strategies_p2)})
+        coeff = {(t, action): p.prod({d: model.payoff_attacker(action+1, d//num_ttps, (d % num_ttps)+1, t+1) for d in range(strategies_p2)})
                  for action in range(num_ttps) for t in range(num_attackers)}
 
         # for each possible action, check that the chosen action is >= (i.e., that the attacker best responds)

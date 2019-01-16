@@ -32,6 +32,6 @@ class ModelExtendedGen(ModelExtended):
 
     def payoff_defender_single_defender_arg(self, a, d, t):
         num_ttps = 3
-        wait = d / num_ttps
+        wait = d // num_ttps
         blind_evict = d % num_ttps + 1
         return self.payoff_defender(a, wait, blind_evict, t)
