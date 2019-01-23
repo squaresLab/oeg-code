@@ -12,7 +12,8 @@ def get_attacker_br(dp, timesteps=3, p_t1=0.33, p_t2=0.33, p_t3=0.33,debug=True,
         num_ttps = 3
 
         strategies_p1 = num_ttps**num_attackers
-        strategies_p2 = timesteps*num_ttps
+        #strategies_p2 = timesteps*num_ttps
+        strategies_p2 = ((timesteps**2 + timesteps)/2)*num_attackers
 
         nation_prior = p_t1
         criminal_prior = p_t2
@@ -78,7 +79,8 @@ def get_stackelberg(timesteps=3, t1_prior=0.33, t2_prior=0.33, t3_prior=0.33, de
         num_ttps = 3
 
         strategies_p1 = num_ttps**num_attackers
-        strategies_p2 = timesteps*num_ttps
+        # strategies_p2 = timesteps*num_ttps
+        strategies_p2 = ((timesteps ** 2 + timesteps) // 2) * num_attackers
 
         nation_prior = t1_prior
         criminal_prior = t2_prior
@@ -92,6 +94,7 @@ def get_stackelberg(timesteps=3, t1_prior=0.33, t2_prior=0.33, t3_prior=0.33, de
         # Create variables
         # defenders actions
         p = m.addVars(strategies_p2, vtype=GRB.CONTINUOUS)
+        # attackers actions
         a = m.addVars(num_attackers, num_ttps, vtype=GRB.BINARY)
 
         # Set objective
@@ -128,7 +131,7 @@ def get_stackelberg(timesteps=3, t1_prior=0.33, t2_prior=0.33, t3_prior=0.33, de
 
 def main():
 
-    m = get_stackelberg(debug=True)
+    m = get_stackelberg(t1_prior=0.33, t2_prior=0.33, t3_prior=0.33, debug=True)
 
     for v in m.getVars():
         print(v.varName, v.x)
