@@ -70,7 +70,7 @@ def get_attacker_br(dp, timesteps=3, p_t1=0.33, p_t2=0.33, p_t3=0.33,debug=True,
         print('Error reported')
 
 
-def get_stackelberg(timesteps=3, t1_prior=0.33, t2_prior=0.33, t3_prior=0.33, debug=False, ttp1_obs=0.1, ttp2_obs=0.9, ttp3_obs=0.5):
+def get_stackelberg(timesteps=3, t1_prior=0.25, t2_prior=0.25, t3_prior=0.25, t4_prior=0.25, debug=False, ttp1_obs=0.1, ttp2_obs=0.9, ttp3_obs=0.5):
     model = ModelExtendedGen(ttp1_obs, ttp2_obs, ttp3_obs, horizon=timesteps)
 
     try:
@@ -85,6 +85,7 @@ def get_stackelberg(timesteps=3, t1_prior=0.33, t2_prior=0.33, t3_prior=0.33, de
         nation_prior = t1_prior
         criminal_prior = t2_prior
         terrorist_prior = t3_prior
+        no_attacker_prior = t4_prior
 
         # Create a new model
         m = Model("mip1")
@@ -105,6 +106,7 @@ def get_stackelberg(timesteps=3, t1_prior=0.33, t2_prior=0.33, t3_prior=0.33, de
                 obj += nation_prior * model.payoff_defender_single_defender_arg(a_index+1, d, 1) * p[d] * a[0, a_index]
                 obj += criminal_prior * model.payoff_defender_single_defender_arg(a_index+1, d, 2) * p[d] * a[1, a_index]
                 obj += terrorist_prior * model.payoff_defender_single_defender_arg(a_index+1, d, 3) * p[d] * a[2, a_index]
+                obj += no_attacker_prior * model.payoff_defender_single_defender_arg(a_index+1, d, 4) * p[d] * (1.0/num_ttps)
 
         m.setObjective(obj, GRB.MAXIMIZE)
 
@@ -131,7 +133,7 @@ def get_stackelberg(timesteps=3, t1_prior=0.33, t2_prior=0.33, t3_prior=0.33, de
 
 def main():
 
-    m = get_stackelberg(t1_prior=0.33, t2_prior=0.33, t3_prior=0.33, debug=True)
+    m = get_stackelberg(t1_prior=0.1, t2_prior=0.1, t3_prior=0.1, t4_prior=0.7, debug=True)
 
     for v in m.getVars():
         print(v.varName, v.x)

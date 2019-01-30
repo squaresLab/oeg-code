@@ -8,6 +8,7 @@ class ModelExtendedGen(ModelExtended):
         super(ModelExtendedGen, self).__init__(*args, **kwargs)
         self.a_evict_cost = [1, 0.5, 0.75]
         self.active_measure_cost = .5
+        self.no_attacker_type = 4
 
     @staticmethod
     def triangular_root(n):
@@ -25,13 +26,21 @@ class ModelExtendedGen(ModelExtended):
 
         # if active measure used, pay its use cost
         if active_measure >= 0:
-            cost += (self.active_measure_failed / (1-self.active_measure_missed(a))) * self.active_measure_cost
+            if self.active_measure_failed == 0 and self.evict_chance == 1:
+                cost += self.active_measure_cost
+            else:
+                cost += (self.active_measure_failed / (1-self.active_measure_missed(a))) * self.active_measure_cost
 
         return cost
 
     def payoff_defender(self, a, wait, blind_evict, t, active_measure=-1):
 
-        return -self.payoff_attacker(a, wait, blind_evict, t, active_measure)*t-self.defense_cost(a, wait, blind_evict, active_measure)
+        if t == self.no_attacker_type:
+            self.active_measure_failed = 0
+            self.evict_chance = 1
+            return -self.defense_cost(a, wait, blind_evict, active_measure)
+        else:
+            return -self.payoff_attacker(a, wait, blind_evict, t, active_measure)*t-self.defense_cost(a, wait, blind_evict, active_measure)
 
     def payoff_defender_single_defender_arg(self, a, d, t):
         # how many timesteps? the triangular root of d
@@ -52,7 +61,7 @@ class ModelExtendedGen(ModelExtended):
 
         blind_evict = d % num_ttps + 1
 
-        return self.payoff_defender(a, wait, blind_evict, active_place, t)
+        return self.payoff_defender(a, wait, blind_evict, t, active_place)
 
 
 def main():
