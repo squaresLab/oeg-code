@@ -42,6 +42,29 @@ class ModelExtendedGen(ModelExtended):
         else:
             return -self.payoff_attacker(a, wait, blind_evict, t, active_measure)*t-self.defense_cost(a, wait, blind_evict, active_measure)
 
+    def payoff_attacker_single_defender_arg(self, a, d, t):
+        # how many timesteps? the triangular root of d
+        num_ttps = 3
+        trig = (d // num_ttps) + 1
+        root = self.triangular_root(trig)
+        prev_root = self.triangular_root(trig-1)
+        timesteps = math.ceil(root)
+        floor = math.floor(prev_root)
+        start = ((floor**2 + floor)/2) + 1
+        active_place = trig - start - 1
+
+        if active_place < 0:
+            active_place = -1
+            wait = timesteps - 1
+        else:
+            wait = timesteps - 2
+
+        blind_evict = d % num_ttps + 1
+
+        wait = int(wait)
+
+        return self.payoff_attacker(a, wait, blind_evict, t, active_place)
+
     def payoff_defender_single_defender_arg(self, a, d, t):
         # how many timesteps? the triangular root of d
         num_ttps = 3
@@ -58,6 +81,8 @@ class ModelExtendedGen(ModelExtended):
             wait = timesteps - 1
         else:
             wait = timesteps - 2
+
+        wait = int(wait)
 
         blind_evict = d % num_ttps + 1
 
