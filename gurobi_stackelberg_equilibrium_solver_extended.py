@@ -106,7 +106,7 @@ def get_stackelberg(timesteps=3, t1_prior=0.25, t2_prior=0.25, t3_prior=0.25, t4
                 obj += nation_prior * model.payoff_defender_single_defender_arg(a_index+1, d, 1) * p[d] * a[0, a_index]
                 obj += criminal_prior * model.payoff_defender_single_defender_arg(a_index+1, d, 2) * p[d] * a[1, a_index]
                 obj += terrorist_prior * model.payoff_defender_single_defender_arg(a_index+1, d, 3) * p[d] * a[2, a_index]
-                obj += no_attacker_prior * model.payoff_defender_single_defender_arg(a_index+1, d, 4) * p[d] * (1.0/num_ttps)
+            obj += no_attacker_prior * model.payoff_defender_single_defender_arg(a_index+1, d, 4) * p[d] * 1.0
 
         m.setObjective(obj, GRB.MAXIMIZE)
 
