@@ -17,6 +17,7 @@ class ModelExtended(object):
         else:
             return -1
 
+# active measure is missed by the attacker, i.e., the chance that that measure succeeds
     @staticmethod
     def active_measure_missed(a):
         if a == 1:

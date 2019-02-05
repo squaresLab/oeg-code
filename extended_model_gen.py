@@ -6,7 +6,7 @@ class ModelExtendedGen(ModelExtended):
 
     def __init__(self, *args, **kwargs):
         super(ModelExtendedGen, self).__init__(*args, **kwargs)
-        self.a_evict_cost = [1, 0.5, 0.75]
+        self.a_evict_cost = [1, 0.5, 0.75, 0]
         self.active_measure_cost = .5
         self.no_attacker_type = 4
 
@@ -37,7 +37,7 @@ class ModelExtendedGen(ModelExtended):
 
         if t == self.no_attacker_type:
             self.active_measure_failed = 0
-            self.evict_chance = 1
+            self.evict_chance = 1  # that is, the chance of reaching the evict tactic
             return -self.defense_cost(a, wait, blind_evict, active_measure)
         else:
             return -self.payoff_attacker(a, wait, blind_evict, t, active_measure)*t-self.defense_cost(a, wait, blind_evict, active_measure)
