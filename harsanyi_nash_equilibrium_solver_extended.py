@@ -86,8 +86,15 @@ def getMixedStrategyProfile(timesteps=2, p_t1=0.33, p_t2=0.33, p_na=0.33, ttp1_o
 
 
 def main():
+    timesteps=2
+    num_attackers = 2
+    num_ttps = 2
 
-    solution = get_solution()
+    strategies_p1 = num_ttps ** num_attackers
+    # strategies_p2 = timesteps*num_ttps
+    strategies_p2 = ((timesteps ** 2 + timesteps) // 2) * (num_attackers + 1)  # plus one for pass tactic case
+
+    solution = get_solution(timesteps=2, p_t1=0, p_t2=0, p_na=1)
 
     if (len(solution)==1):
         solution = solution[0]
@@ -97,13 +104,13 @@ def main():
     print(solution)
     line = ""
     for x in range(strategies_p1 + strategies_p2):
-        line += str(solution[x])
+        line += str(solution[0][x])
         if x < strategies_p1 + strategies_p2 - 1:
             line += ","
 
     print(line)
     print(solution)
-    print(solution.payoff(1))
+    print(solution[0].payoff(1))
 
 
 if __name__ == "__main__":

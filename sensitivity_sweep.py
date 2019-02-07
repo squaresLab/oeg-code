@@ -12,7 +12,7 @@ strategies_p2 = ((timesteps ** 2 + timesteps) // 2) * (
 
 print("na_prior,t1_prior,equilibrium,11,12,21,22,e1,e2,p,we1,we2,wp,ae1,ae2,ap,payoff,uniform")
 
-sweep_step=50
+sweep_step=25
 
 for no_attacker in range(sweep_step+1):
     for p1 in range(sweep_step+1):
@@ -39,15 +39,15 @@ for no_attacker in range(sweep_step+1):
         linen = str(tn)+","+str(t1) + ",nash,"
         lines = str(tn)+","+str(t1) + ",stackelberg,"
 
-        # for x in range(strategies_p1 + strategies_p2):
-        #     linen += str(solution[x]) + ","
-        #     s = x
-        #     # if 0 <= s < 4:
-        #     #     s += 4
-        #     #     random_profile[x] = solution[x]
-        #     # elif 3 < s < 8:
-        #     #     s -= 4
-        #     lines += str(ans[s]) + ","
+        for x in range(strategies_p1 + strategies_p2):
+            linen += str(solution[0][x]) + ","
+            s = x
+            if 0 <= s < 4:
+                s += 9
+                random_profile[x] = solution[0][x]
+            elif 3 < s < 13:
+                s -= 4
+            lines += str(ans[s]) + ","
 
         if(len(solution)>1):
             print("Warning more than one NE: "+str(len(solution)))

@@ -130,7 +130,7 @@ def get_stackelberg(timesteps=2, t1_prior=0.33, t2_prior=0.33, tn_prior=0.33, de
 
 def main():
 
-    m = get_stackelberg(t1_prior=0.33, t2_prior=0.33, tn_prior=0.33, debug=True)
+    m = get_stackelberg(t1_prior=0, t2_prior=0, tn_prior=1, debug=True)
 
     for v in m.getVars():
         print(v.varName, v.x)
