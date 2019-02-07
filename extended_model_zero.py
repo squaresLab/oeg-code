@@ -1,7 +1,7 @@
 class ModelExtended(object):
 
-    def __init__(self, ttp1_obs=0.1, ttp2_obs=0.9, ttp3_obs=0.5, horizon=3):
-        self.a_observed_chance = [ttp1_obs, ttp2_obs, ttp3_obs]
+    def __init__(self, ttp1_obs=0.1, ttp2_obs=0.9, horizon=2):
+        self.a_observed_chance = [ttp1_obs, ttp2_obs]
         self.failed_eviction_timesteps = horizon
         self.evict_chance = 0
         self.active_measure_failed = 0

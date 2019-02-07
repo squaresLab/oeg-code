@@ -3,21 +3,21 @@ from gurobipy import *
 from extended_model_gen import ModelExtendedGen
 
 
-def get_attacker_br(dp, timesteps=3, p_t1=0.33, p_t2=0.33, p_t3=0.33,debug=True,ttp1_obs=0.1,ttp2_obs=0.9,ttp3_obs=0.5):
-    model = ModelExtendedGen(ttp1_obs,ttp2_obs,ttp3_obs,horizon=timesteps)
+def get_attacker_br(dp, timesteps=2, p_t1=0.33, p_t2=0.33, p_tn=0.33,debug=True,ttp1_obs=0.1,ttp2_obs=0.9):
+    model = ModelExtendedGen(ttp1_obs,ttp2_obs,horizon=timesteps)
 
     try:
 
-        num_attackers = 3
-        num_ttps = 3
+        num_attackers = 2
+        num_ttps = 2
 
         strategies_p1 = num_ttps**num_attackers
         #strategies_p2 = timesteps*num_ttps
-        strategies_p2 = ((timesteps**2 + timesteps)/2)*num_attackers
+        strategies_p2 = ((timesteps**2 + timesteps)/2)*(num_attackers+1)#plus one for pass tactic
 
         nation_prior = p_t1
         criminal_prior = p_t2
-        terrorist_prior = p_t3
+        none_prior = p_tn
 
         # Create a new model
         m = Model("mip1")
@@ -27,7 +27,7 @@ def get_attacker_br(dp, timesteps=3, p_t1=0.33, p_t2=0.33, p_t3=0.33,debug=True,
         # Create variables
         # defenders actions
         p = m.addVars(strategies_p2, vtype=GRB.CONTINUOUS)
-        a = m.addVars(3, 3, vtype=GRB.BINARY)
+        a = m.addVars(num_attackers, num_ttps, vtype=GRB.BINARY)
 
         # Set objective
         obj = LinExpr()
@@ -38,8 +38,7 @@ def get_attacker_br(dp, timesteps=3, p_t1=0.33, p_t2=0.33, p_t3=0.33,debug=True,
                     0, a_index]
                 obj += criminal_prior * model.payoff_defender_single_defender_arg(a_index + 1, d, 2) * p[d] * a[
                     1, a_index]
-                obj += terrorist_prior * model.payoff_defender_single_defender_arg(a_index + 1, d, 3) * p[d] * a[
-                    2, a_index]
+            obj += none_prior * model.payoff_defender_single_defender_arg(a_index + 1, d, 3) * p[d] * 1
 
         m.setObjective(obj, GRB.MAXIMIZE)
 
@@ -70,22 +69,21 @@ def get_attacker_br(dp, timesteps=3, p_t1=0.33, p_t2=0.33, p_t3=0.33,debug=True,
         print('Error reported')
 
 
-def get_stackelberg(timesteps=3, t1_prior=0.25, t2_prior=0.25, t3_prior=0.25, t4_prior=0.25, debug=False, ttp1_obs=0.1, ttp2_obs=0.9, ttp3_obs=0.5):
-    model = ModelExtendedGen(ttp1_obs, ttp2_obs, ttp3_obs, horizon=timesteps)
+def get_stackelberg(timesteps=2, t1_prior=0.33, t2_prior=0.33, tn_prior=0.33, debug=False, ttp1_obs=0.1, ttp2_obs=0.9):
+    model = ModelExtendedGen(ttp1_obs, ttp2_obs, horizon=timesteps)
 
     try:
 
-        num_attackers = 3
-        num_ttps = 3
+        num_attackers = 2
+        num_ttps = 2
 
         strategies_p1 = num_ttps**num_attackers
         # strategies_p2 = timesteps*num_ttps
-        strategies_p2 = ((timesteps ** 2 + timesteps) // 2) * num_attackers
+        strategies_p2 = ((timesteps ** 2 + timesteps) // 2) * (num_attackers+1) # plus one for pass tactic case
 
         nation_prior = t1_prior
         criminal_prior = t2_prior
-        terrorist_prior = t3_prior
-        no_attacker_prior = t4_prior
+        no_attacker_prior = tn_prior
 
         # Create a new model
         m = Model("mip1")
@@ -105,8 +103,7 @@ def get_stackelberg(timesteps=3, t1_prior=0.25, t2_prior=0.25, t3_prior=0.25, t4
             for a_index in range(num_ttps):
                 obj += nation_prior * model.payoff_defender_single_defender_arg(a_index+1, d, 1) * p[d] * a[0, a_index]
                 obj += criminal_prior * model.payoff_defender_single_defender_arg(a_index+1, d, 2) * p[d] * a[1, a_index]
-                obj += terrorist_prior * model.payoff_defender_single_defender_arg(a_index+1, d, 3) * p[d] * a[2, a_index]
-            obj += no_attacker_prior * model.payoff_defender_single_defender_arg(a_index+1, d, 4) * p[d] * 1.0
+            obj += no_attacker_prior * model.payoff_defender_single_defender_arg(a_index+1, d, 3) * p[d] * 1.0
 
         m.setObjective(obj, GRB.MAXIMIZE)
 
@@ -133,7 +130,7 @@ def get_stackelberg(timesteps=3, t1_prior=0.25, t2_prior=0.25, t3_prior=0.25, t4
 
 def main():
 
-    m = get_stackelberg(t1_prior=0.1, t2_prior=0.1, t3_prior=0.1, t4_prior=0.7, debug=True)
+    m = get_stackelberg(t1_prior=0.33, t2_prior=0.33, tn_prior=0.33, debug=True)
 
     for v in m.getVars():
         print(v.varName, v.x)

@@ -6,9 +6,9 @@ class ModelExtendedGen(ModelExtended):
 
     def __init__(self, *args, **kwargs):
         super(ModelExtendedGen, self).__init__(*args, **kwargs)
-        self.a_evict_cost = [1, 0.5, 0.75, 0]
+        self.a_evict_cost = [1, 0.5, 0]
         self.active_measure_cost = .5
-        self.no_attacker_type = 4
+        self.no_attacker_type = 3
 
     @staticmethod
     def triangular_root(n):
@@ -44,7 +44,7 @@ class ModelExtendedGen(ModelExtended):
 
     def payoff_attacker_single_defender_arg(self, a, d, t):
         # how many timesteps? the triangular root of d
-        num_ttps = 3
+        num_ttps = 2+1  # also need to add 1 for the pass tactic
         trig = (d // num_ttps) + 1
         root = self.triangular_root(trig)
         prev_root = self.triangular_root(trig-1)
@@ -67,7 +67,7 @@ class ModelExtendedGen(ModelExtended):
 
     def payoff_defender_single_defender_arg(self, a, d, t):
         # how many timesteps? the triangular root of d
-        num_ttps = 3
+        num_ttps = 2+1  # also need to add 1 for the pass tactic
         trig = (d // num_ttps) + 1
         root = self.triangular_root(trig)
         prev_root = self.triangular_root(trig-1)
