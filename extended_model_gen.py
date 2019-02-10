@@ -91,9 +91,22 @@ class ModelExtendedGen(ModelExtended):
 
 def main():
     model = ModelExtendedGen()
-    ans = model.payoff_defender(3, 0, 3, 3)
-    print(ans)
+    # sum = 0
+    # for x in range(9):
+    #     sum += model.payoff_defender_single_defender_arg(1, x, 3) * 0.56 + model.payoff_defender_single_defender_arg(1, x, 1) * 0.352 + model.payoff_defender_single_defender_arg(1, x, 2) * 0.088
+    # print(str(sum/9.0))
 
+    # sum = 0
+    # x=0
+    # sum += model.payoff_defender_single_defender_arg(2, x, 3) * 0.04 + model.payoff_defender_single_defender_arg(2, x, 1) * 0.3072 + model.payoff_defender_single_defender_arg(2, x, 2) * 0.6528
+    # print(str(sum))
+
+    # sum = 0
+    # for x in range(9):
+    #     sum += model.payoff_attacker_single_defender_arg(1, x, 2)
+    # print(str(sum/9.0))
+
+    print(str(model.payoff_defender_single_defender_arg(1, 5, 2)))
 
 if __name__ == "__main__":
     main()
