@@ -12,7 +12,7 @@ strategies_p2 = ((timesteps ** 2 + timesteps) // 2) * (
 
 print("na_prior,t1_prior,t2_prior,equilibrium,11,12,21,22,e1,e2,p,we1,we2,wp,ae1,ae2,ap,payoff,uniform")
 
-sweep_step=50
+sweep_step=100
 
 for no_attacker in range(sweep_step+1):
     for p1 in range(sweep_step+1):

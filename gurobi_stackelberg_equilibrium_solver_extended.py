@@ -1,7 +1,7 @@
 from gurobipy import *
 
 from extended_model_gen import ModelExtendedGen
-
+import time
 
 def get_attacker_br(dp, timesteps=2, p_t1=0.33, p_t2=0.33, p_tn=0.33,debug=True,ttp1_obs=0.1,ttp2_obs=0.9):
     model = ModelExtendedGen(ttp1_obs,ttp2_obs,horizon=timesteps)
@@ -143,14 +143,16 @@ def main():
     # m = get_stackelberg(t1_prior=0.2112, t2_prior=0.2288, tn_prior=0.56, debug=True)
     # m = get_attacker_br([div,div,div,div,div,div,div,div,div],p_t1=0.2112, p_t2=0.2288, p_tn=0.56, debug=True)
 
-
-    # m = get_stackelberg(t1_prior=0.352, t2_prior=0.088, tn_prior=0.56, debug=True)
-    m = get_attacker_br([div,div,div,div,div,div,div,div,div],p_t1=0.352, p_t2=0.088, p_tn=0.56, debug=True)
+    stack_start_time = time.time()
+    m = get_stackelberg(t1_prior=0.333, t2_prior=0.333, tn_prior=0.333, debug=True,timesteps=400)
+    stack_duration = time.time() - stack_start_time
+    # m = get_attacker_br([div,div,div,div,div,div,div,div,div],p_t1=0.352, p_t2=0.088, p_tn=0.56, debug=True)
 
     for v in m.getVars():
         print(v.varName, v.x)
 
     print('Obj:', m.objVal)
+    print(stack_duration)
 
 
 if __name__ == '__main__':
