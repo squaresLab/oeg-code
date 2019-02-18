@@ -8,7 +8,7 @@ agg <- aggregate(prelim, by=list(timesteps,equilibrium), FUN=median)
 
 g<- ggplot(agg, aes(x=timesteps, y=time, group=equilibrium)) + geom_line(aes(linetype=equilibrium)) 
   #geom_point(aes(shape=X2))
-
+# 6 x 5
 g <- g + theme_bw() + xlab("Number of Timesteps") + ylab("Time in Seconds") + labs(linetype="Game Type")
 g <- g + theme(legend.position=c(0.5,0.5), legend.text = element_text(size=12), legend.title=element_text(size=12), text=element_text(size=12))
 g

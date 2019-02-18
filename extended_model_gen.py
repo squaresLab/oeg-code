@@ -7,7 +7,7 @@ class ModelExtendedGen(ModelExtended):
     def __init__(self, *args, **kwargs):
         super(ModelExtendedGen, self).__init__(*args, **kwargs)
         self.a_evict_cost = [1, 0.5, 0]
-        self.active_measure_cost = .5
+        self.active_measure_cost = .1
         self.no_attacker_type = 3
 
     @staticmethod
@@ -106,7 +106,10 @@ def main():
     #     sum += model.payoff_attacker_single_defender_arg(1, x, 2)
     # print(str(sum/9.0))
 
-    print(str(model.payoff_defender_single_defender_arg(1, 5, 2)))
+    print("ttp1 def: "+str(model.payoff_defender_single_defender_arg(1, 2, 3)))
+    print("ttp1 attacker: "+str(model.payoff_attacker_single_defender_arg(1, 2, 3)))
+    print("ttp2 def: "+str(model.payoff_defender_single_defender_arg(2, 2, 3)))
+    print("ttp2 attacker: "+str(model.payoff_attacker_single_defender_arg(2, 2, 3)))
 
 if __name__ == "__main__":
     main()

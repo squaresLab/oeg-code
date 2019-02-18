@@ -15,9 +15,9 @@ print("na_prior,t1_prior,t2_prior,equilibrium,decoys,11,12,21,22,e1,e2,p,we1,we2
 # decoy_cost = 0.0065
 decoy_cost = 0.03
 
-tn = 0.5
+tn = 0.30
 
-sweep_steps = 50
+sweep_steps = 70
 
 for x in range(sweep_steps+1):
 

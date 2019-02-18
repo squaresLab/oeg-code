@@ -144,7 +144,7 @@ def main():
     # m = get_attacker_br([div,div,div,div,div,div,div,div,div],p_t1=0.2112, p_t2=0.2288, p_tn=0.56, debug=True)
 
     stack_start_time = time.time()
-    m = get_stackelberg(t1_prior=0.333, t2_prior=0.333, tn_prior=0.333, debug=True,timesteps=400)
+    m = get_stackelberg(t1_prior=0.333, t2_prior=0.333, tn_prior=0.333, debug=True,timesteps=300)
     stack_duration = time.time() - stack_start_time
     # m = get_attacker_br([div,div,div,div,div,div,div,div,div],p_t1=0.352, p_t2=0.088, p_tn=0.56, debug=True)
 

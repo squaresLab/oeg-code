@@ -9,9 +9,9 @@ class ModelExtended(object):
     @staticmethod
     def active_measure_modifier(hidden_chance, a):
         if a == 1:
-            return 0.85
+            return 0.855
         elif a == 2:
-            return 0.05
+            return 0.095
         elif a == 3:
             return 0.45
         else:
@@ -49,6 +49,8 @@ class ModelExtended(object):
             if t == timesteps - 1:
                 if blind_evict != a:
                     expected_time += reach_chance * self.failed_eviction_timesteps
+                else:
+                    expected_time += reach_chance * t
             else:
                 # if not an eviction tactic
                 if t == active_measure:
