@@ -2,7 +2,7 @@ class ModelExtended(object):
 
     def __init__(self, ttp1_obs=0.1, ttp2_obs=0.9, horizon=2):
         self.a_observed_chance = [ttp1_obs, ttp2_obs]
-        self.failed_eviction_timesteps = horizon
+        self.horizon = horizon
         self.evict_chance = 0
         self.active_measure_failed = 0
 
@@ -29,6 +29,14 @@ class ModelExtended(object):
         else:
             return -1
 
+    def failed_eviction_timesteps(self,t,a):
+        progress = t/self.horizon
+        action_pen = 3 - a
+        progress_pen = 1 - progress
+
+        return t + self.horizon * (1-progress_pen) + action_pen
+
+
     def expected_time_in_system(self, a, wait, blind_evict, active_measure=-1):
 
         # sum over each timestep
@@ -48,7 +56,7 @@ class ModelExtended(object):
             # if an eviction tactic
             if t == timesteps - 1:
                 if blind_evict != a:
-                    expected_time += reach_chance * self.failed_eviction_timesteps
+                    expected_time += reach_chance * self.failed_eviction_timesteps(t,a)
                 else:
                     expected_time += reach_chance * t
             else:
@@ -57,7 +65,7 @@ class ModelExtended(object):
                     # if we are during the active measure
                     # chance that the attacker notices and defender fails
                     self.active_measure_failed = reach_chance * (1 - self.active_measure_missed(a))
-                    expected_time += self.active_measure_failed * self.failed_eviction_timesteps
+                    expected_time += self.active_measure_failed * self.failed_eviction_timesteps(t,a)
                     # chance that attacker does not notice, and we get better at noticing
                     hidden_chance = self.active_measure_modifier(hidden_chance, a)
                     reach_chance *= self.active_measure_missed(a)
