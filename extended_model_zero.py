@@ -29,12 +29,13 @@ class ModelExtended(object):
         else:
             return -1
 
+    # failed eviction penalty paramteterized by time and attacker TTP
     def failed_eviction_timesteps(self,t,a):
-        progress = t/self.horizon
-        action_pen = 3 - a
-        progress_pen = 1 - progress
+        penalty = 0
+        if a == 2:
+            penalty = t/self.horizon * 1.0
 
-        return t + self.horizon * (1-progress_pen) + action_pen
+        return self.horizon + penalty
 
 
     def expected_time_in_system(self, a, wait, blind_evict, active_measure=-1):
