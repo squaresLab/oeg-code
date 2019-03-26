@@ -94,7 +94,7 @@ def main():
     # strategies_p2 = timesteps*num_ttps
     strategies_p2 = ((timesteps ** 2 + timesteps) // 2) * (num_attackers + 1)  # plus one for pass tactic case
 
-    solution = get_solution(timesteps=2, p_t1=0, p_t2=0, p_na=1)
+    solution = get_solution(timesteps=timesteps, p_t1=0.5, p_t2=0.5, p_na=0)
 
     if (len(solution)==1):
         solution = solution[0]
@@ -104,13 +104,13 @@ def main():
     print(solution)
     line = ""
     for x in range(strategies_p1 + strategies_p2):
-        line += str(solution[0][x])
+        line += str(solution[x])
         if x < strategies_p1 + strategies_p2 - 1:
             line += ","
 
     print(line)
     print(solution)
-    print(solution[0].payoff(1))
+    print(solution.payoff(1))
 
 
 if __name__ == "__main__":
