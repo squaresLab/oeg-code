@@ -1,36 +1,36 @@
 import gambit
-from fractions import Fraction
+from decimal import Decimal
 
 tau = 2
 # must_attack_by = tau + 1  # where 0 indicates first timestep and tau indicates does not attack
 num_ttps = 2
-ttp_obs = (0.1, 0.9)
-priors = [0.5, 0.5]
+ttp_obs = (Decimal('.1'), Decimal('0.9'))
+priors = [Decimal('0.5'), Decimal('0.5')]
 num_attacker_types = len(priors)
 
 # defender eviction actions, chance to evict each TTP
 defender_eviction_actions = [((0, 1), 1),
-                             ((1, 0), 0.5)]
+                             ((1, 0), Decimal('0.5'))]
 # defender observation actions, change to obs, chance to get noticed, cost
 defender_observation_actions = [((0, 0), (0, 0), 0),
-                                ((.95, .95), (.9, .1), .1)]
+                                ((Decimal('.95'), Decimal('.95')), (Decimal('.9'), Decimal('.1')), Decimal('.1'))]
 
 # cost of defenders actions, eviction first, then obs
-action_cost = (1, .5, 0, .1)
+action_cost = (1, Decimal('.5'), 0, Decimal('.1'))
 
 # appropriateness to type of TTP
-appropriateness = [(1, .5),
-                   (.5, 1)]
+appropriateness = [(1, Decimal('.5')),
+                   (Decimal('.5'), 1)]
 
 # disruptiveness of TTP to the defender
 disruptiveness = [1, 2]
 
 
 def check_type(val):
-    if isinstance(val, gambit.lib.libgambit.Rational) or isinstance(val, Fraction):
+    if isinstance(val, gambit.lib.libgambit.Decimal) or isinstance(val, Decimal):
         return val
     else:
-        return gambit.Rational.from_float(val)
+        return gambit.Decimal.from_float(val)
 
 
 def payoff_attacker(time_step, attacker_type, attacker_ttp):
@@ -125,15 +125,14 @@ def fill_defender_actions(cur_node, time_step, attacker_type, attacker_ttp, ttp_
 
                 # fill in tree for not noticed
                 not_noticed_node = cur_node.children[0]
-                not_noticed_node.prior_action.prob = gambit.Rational.from_float(
-                    1 - defender_observation_actions[obs_index][1][attacker_ttp])
+
+                not_noticed_node.prior_action.prob = 1 - defender_observation_actions[obs_index][1][attacker_ttp]
                 fill_defender_observational_node(not_noticed_node, time_step, attacker_type, attacker_ttp, q_prime,
                                                  defenders_cost + action_cost[defender_move])
 
                 # if noticed, game ends w/ payoff values
                 noticed_node = cur_node.children[1]
-                noticed_node.prior_action.prob = gambit.Rational.from_float(
-                    defender_observation_actions[obs_index][1][attacker_ttp])
+                noticed_node.prior_action.prob = defender_observation_actions[obs_index][1][attacker_ttp]
                 noticed_outcome = g.outcomes.add("Attacker noticed defender's action")
                 noticed_node.outcome = noticed_outcome
 
@@ -152,7 +151,7 @@ def fill_defender_actions(cur_node, time_step, attacker_type, attacker_ttp, ttp_
             eviction_succeeds_outcome[0] = payoff_defender(time_step, attacker_type, attacker_ttp, defenders_cost)
             eviction_succeeds_outcome[1] = payoff_attacker(time_step, attacker_type, attacker_ttp)
 
-            # check if this eviction is probabalistic
+            # check if this eviction is probabilistic
             eviction_chance = defender_eviction_actions[defender_move][0][attacker_ttp]
             if eviction_chance == 0 or eviction_chance == 1:
                 # game ends directly
@@ -163,18 +162,18 @@ def fill_defender_actions(cur_node, time_step, attacker_type, attacker_ttp, ttp_
                     cur_node.outcome = eviction_succeeds_outcome
                     eviction_fail_outcome.delete()
             else:
-                # game ends probibalistically
+                # game ends probabilistically
                 eviction_move = cur_node.append_move(chance, 2)
                 eviction_move.label = "Eviction attempt"
 
                 # if eviction fails
                 eviction_fail_node = cur_node.children[0]
-                eviction_fail_node.prior_action.prob = gambit.Rational.from_float(1 - eviction_chance)
+                eviction_fail_node.prior_action.prob = gambit.Decimal.from_float(1 - eviction_chance)
                 eviction_fail_node.outcome = eviction_fail_outcome
 
                 # if eviction succeeds
                 eviction_succeeds_node = cur_node.children[1]
-                eviction_succeeds_node.prior_action.prob = gambit.Rational.from_float(eviction_chance)
+                eviction_succeeds_node.prior_action.prob = gambit.Decimal.from_float(eviction_chance)
                 eviction_succeeds_node.outcome = eviction_succeeds_outcome
 
 
