@@ -1,7 +1,7 @@
 import gambit
 from decimal import Decimal
 
-tau = 4
+tau = 2
 # must_attack_by = tau + 1  # where 0 indicates first timestep and tau indicates does not attack
 num_ttps = 2
 ttp_obs = (Decimal('.1'), Decimal('0.9'))
@@ -10,19 +10,20 @@ num_attacker_types = len(priors)
 
 # defender eviction actions, chance to evict each TTP
 defender_eviction_actions = [((1, 0), 1),
-                             ((0, 1), Decimal('0.5'))]
+                             ((0, 1), Decimal('0.5')),
+                             ((0, 0), 0)]
 # defender observation actions, change to obs, chance to get noticed, cost
 defender_observation_actions = [((1, 1), (0, 0), 0),
                                 ((Decimal('.95'), Decimal('.95')), (Decimal('.9'), Decimal('.1')), Decimal('.1'))]
 
 # cost of defenders actions, eviction first, then obs
-action_cost = (1, Decimal('.5'), 0, Decimal('.1'))
+action_cost = (1, Decimal('.5'), 0, 0, Decimal('.1'))
 
 # appropriateness to type of TTP
 appropriateness = [(1, Decimal('.5')),
                    (Decimal('.5'), 1)]
 
-# disruptiveness of TTP to the defender
+# disruptiveness of type to the defender
 disruptiveness = [1, 2]
 
 
@@ -39,7 +40,7 @@ def payoff_attacker(time_step, attacker_type, attacker_ttp):
 
 def payoff_defender(time_step, attacker_type, attacker_ttp, defenders_cost):
     return check_type(
-        -payoff_attacker(time_step, attacker_type, attacker_ttp) * disruptiveness[attacker_ttp] - defenders_cost)
+        -payoff_attacker(time_step, attacker_type, attacker_ttp) * disruptiveness[attacker_type] - defenders_cost)
 
 
 def payoff_attacker_failed_eviction(time_step, attacker_type, attacker_ttp):
@@ -48,7 +49,7 @@ def payoff_attacker_failed_eviction(time_step, attacker_type, attacker_ttp):
 
 def payoff_defender_failed_eviction(time_step, attacker_type, attacker_ttp, defenders_cost):
     return check_type(-payoff_attacker_failed_eviction(tau, attacker_type, attacker_ttp) * disruptiveness[
-        attacker_ttp] - defenders_cost)
+        attacker_type] - defenders_cost)
 
 
 defender_actions = len(defender_eviction_actions) + len(defender_observation_actions)
@@ -77,9 +78,9 @@ def fill_defender_observational_node(cur_node, time_step, attacker_type, attacke
 
     # if observed, game ends w/ payoff values
     observed_outcome = g.outcomes.add("Attacker observed and evicted")
-    observed_outcome[0] = payoff_defender(time_step + 1, attacker_type, attacker_ttp,
+    observed_outcome[0] = payoff_defender(time_step, attacker_type, attacker_ttp,
                                           defenders_cost + action_cost[attacker_ttp])
-    observed_outcome[1] = payoff_attacker(time_step + 1, attacker_type, attacker_ttp)
+    observed_outcome[1] = payoff_attacker(time_step, attacker_type, attacker_ttp)
     observed_node = cur_node.children[1]
     observed_node.outcome = observed_outcome
     observed_node.prior_action.prob = ttp_obs[attacker_ttp]
