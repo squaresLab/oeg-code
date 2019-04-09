@@ -1,42 +1,35 @@
 class ModelExtended(object):
 
     def __init__(self, ttp1_obs=0.1, ttp2_obs=0.9, horizon=2):
-        self.a_observed_chance = [ttp1_obs, ttp2_obs]
-        self.horizon = horizon
+        # internal calculations only
         self.evict_chance = 0
         self.active_measure_failed = 0
 
-    @staticmethod
-    def active_measure_modifier(hidden_chance, a):
-        if a == 1:
-            return 0.855
-        elif a == 2:
-            return 0.095
-        elif a == 3:
-            return 0.45
-        else:
-            return -1
+        # model parameters
+        self.a_observed_chance = [ttp1_obs, ttp2_obs]
+        self.horizon = horizon
+        self.active_measure_not_noticed = [0.1, 0.9, 0.5]  # not noticed by the attacker
+        self.active_measure_obs_prime = [0.855, 0.095, 0.45]
+        self.technique_appropriateness = [[1, 0.5],
+                                          [0.5, 1]]
+
+    def technique_fit(self, t, a):
+        return self.technique_appropriateness[t-1][a-1]
+
+    def active_measure_modifier(self, hidden_chance, a):
+        return self.active_measure_obs_prime[a-1]
 
 # active measure is missed by the attacker, i.e., the chance that that measure succeeds
-    @staticmethod
-    def active_measure_missed(a):
-        if a == 1:
-            return 0.1
-        elif a == 2:
-            return 0.9
-        elif a == 3:
-            return 0.5
-        else:
-            return -1
+    def active_measure_missed(self, a):
+        return self.active_measure_not_noticed[a-1]
 
     # failed eviction penalty paramteterized by time and attacker TTP
-    def failed_eviction_timesteps(self,t,a):
+    def failed_eviction_timesteps(self, t, a):
         penalty = 0
-        if a == 2:
-            penalty = t/self.horizon * 1.0
+        # if a == 2:
+        #     penalty = t/self.horizon * 1.0
 
         return self.horizon + penalty
-
 
     def expected_time_in_system(self, a, wait, blind_evict, active_measure=-1):
 
@@ -82,6 +75,7 @@ class ModelExtended(object):
         return expected_time
 
     def adjusted_system_time(self, a, wait, blind_evict, t, active_measure=-1):
+        technique_fit = self.technique_fit(t, a)
         technique_fit = 1
 
         if a != t:

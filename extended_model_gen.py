@@ -9,10 +9,14 @@ class ModelExtendedGen(ModelExtended):
         self.a_evict_cost = [1, 0.5, 0]
         self.active_measure_cost = .1
         self.no_attacker_type = 3
+        self.attacker_disruptiveness = [1, 2]
 
     @staticmethod
     def triangular_root(n):
         return (math.sqrt((8 * n) + 1) - 1) / 2
+
+    def disruptiveness(self, t):
+        return self.attacker_disruptiveness[t]
 
     def defense_cost(self, a, wait, blind_evict, active_measure=-1):
         cost = 0
@@ -40,7 +44,7 @@ class ModelExtendedGen(ModelExtended):
             self.evict_chance = 1  # that is, the chance of reaching the evict tactic
             return -self.defense_cost(a, wait, blind_evict, active_measure)
         else:
-            return -self.payoff_attacker(a, wait, blind_evict, t, active_measure)*t-self.defense_cost(a, wait, blind_evict, active_measure)
+            return -self.payoff_attacker(a, wait, blind_evict, t, active_measure)*self.disruptiveness(t)-self.defense_cost(a, wait, blind_evict, active_measure)
 
     def payoff_attacker_single_defender_arg(self, a, d, t):
         # how many timesteps? the triangular root of d
@@ -106,10 +110,10 @@ def main():
     #     sum += model.payoff_attacker_single_defender_arg(1, x, 2)
     # print(str(sum/9.0))
 
-    print("ttp1 def: "+str(model.payoff_defender_single_defender_arg(1, 2, 3)))
-    print("ttp1 attacker: "+str(model.payoff_attacker_single_defender_arg(1, 2, 3)))
-    print("ttp2 def: "+str(model.payoff_defender_single_defender_arg(2, 2, 3)))
-    print("ttp2 attacker: "+str(model.payoff_attacker_single_defender_arg(2, 2, 3)))
+    print("ttp1 def: "+str(model.payoff_defender_single_defender_arg(1, 3, 1)))
+    print("ttp1 attacker: "+str(model.payoff_attacker_single_defender_arg(1, 3, 1)))
+    print("ttp2 def: "+str(model.payoff_defender_single_defender_arg(2, 3, 1)))
+    print("ttp2 attacker: "+str(model.payoff_attacker_single_defender_arg(2, 3, 1)))
 
 if __name__ == "__main__":
     main()
