@@ -76,10 +76,10 @@ class ModelExtended(object):
 
     def adjusted_system_time(self, a, wait, blind_evict, t, active_measure=-1):
         technique_fit = self.technique_fit(t, a)
-        technique_fit = 1
-
-        if a != t:
-                technique_fit *= 0.5
+        # technique_fit = 1
+        #
+        # # if a != t:
+        # #         technique_fit *= 0.5
 
         return self.expected_time_in_system(a, wait, blind_evict, active_measure) * technique_fit
 
