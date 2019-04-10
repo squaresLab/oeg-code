@@ -16,7 +16,7 @@ class ModelExtendedGen(ModelExtended):
         return (math.sqrt((8 * n) + 1) - 1) / 2
 
     def disruptiveness(self, t):
-        return self.attacker_disruptiveness[t]
+        return self.attacker_disruptiveness[t-1]
 
     def defense_cost(self, a, wait, blind_evict, active_measure=-1):
         cost = 0
