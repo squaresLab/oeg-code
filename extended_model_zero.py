@@ -67,6 +67,10 @@ class ModelExtended(object):
 
                 # if there is no active measure, or there is but we havent reached it yet
                 # consider that we may identify and evict the attacker
+                # TODO also, consider that we may choose not to evict the attacker if we lose more utility by doing so
+                #remain_chance = hidden_chance
+                # if util_from_evict < util_from_pass
+                # remain_chance = 1
                 expected_time += reach_chance * t * (1-hidden_chance)
                 # consider that we may continue
                 reach_chance *= hidden_chance
