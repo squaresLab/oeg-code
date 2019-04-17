@@ -65,11 +65,11 @@ def main(args):
     num_attackers = 2
     num_ttps = 2
 
-    random.seed(68746168)
+    random.seed(568468+int(args[2]))
 
-    trials = 100
+    trials = 100000
 
-    print(header)
+    #print(header)
 
     start = time.time()
 
