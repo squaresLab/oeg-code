@@ -9,7 +9,7 @@ from harsanyi_nash_equilibrium_solver_extended import get_solution_from_model
 # appropriatness given as a(attacker type, TTP)
 # p is active measure change to q
 # attacker notice defender's active measure
-header = "q(TTP1),q(TTP2),a(11),a(12),a(21),a(22),a(n1),a(n2),p(1),p(2),p(3),1,2,3,d(1),d(2),d(3),c(E1),c(E2),c(P),c(A),t1,t2,na,equilibrium,num_eqs,11,12,21,22,e1,e2,p,we1,we2,wp,ae1,ae2,ap,payoff"
+header = "timesteps,q(TTP1),q(TTP2),a(11),a(12),a(21),a(22),a(n1),a(n2),p(1),p(2),p(3),1,2,3,d(1),d(2),d(3),c(E1),c(E2),c(P),c(A),t1,t2,na,equilibrium,num_eqs,11,12,21,22,e1,e2,p,we1,we2,wp,ae1,ae2,ap,payoff"
 
 def rand_priors(n):
     slice_points = []
@@ -31,6 +31,7 @@ def rand_priors(n):
 
 
 def print_model(model):
+    sys.stdout.write(str(model.horizon)+",")
     for x in model.a_observed_chance:
         sys.stdout.write(str(x)+",")
     for attacker_type in model.technique_appropriateness:
