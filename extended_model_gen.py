@@ -80,7 +80,7 @@ class ModelExtendedGen(ModelExtended):
                 if cost_to_evict > defender_util_remain:
                     pass
                 else:
-                    expected_cost += self.a_evict_cost[a-1]
+                    expected_cost += self.a_evict_cost[a-1] * (1-hidden_chance) * reach_chance
                 # consider that we may continue
                 reach_chance *= hidden_chance
 
@@ -130,7 +130,7 @@ class ModelExtendedGen(ModelExtended):
 
                 if cost_to_evict > defender_util_remain:
                     # if too expensive to evict, we choose to pass and let them stay till the end
-                    expected_time += reach_chance * self.horizon
+                    expected_time += reach_chance * self.horizon * (1 - hidden_chance)
                 else:
                     expected_time += reach_chance * t * (1 - hidden_chance)
                 # consider that we may continue
