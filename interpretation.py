@@ -67,7 +67,7 @@ def main(args):
 
     random.seed(568468+int(args[2]))
 
-    trials = 100000
+    trials = 10000
 
     #print(header)
 
