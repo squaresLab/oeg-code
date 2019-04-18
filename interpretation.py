@@ -74,69 +74,72 @@ def main(args):
     start = time.time()
 
     for x in range(trials):
-        ttp1_obs = random.random()
-        ttp2_obs = random.random()
 
-        model = ModelExtendedGen(ttp1_obs, ttp2_obs, horizon=timesteps)
-        # all ttps have 0 appropriateness for the no attacker case
-        appropriateness = [[random.random() if y < num_attackers else 0 for x in range(num_ttps)] for y in range(num_attackers+1)]
-        model.technique_appropriateness = appropriateness
+        for timesteps in range(1, 11):
 
-        model.active_measure_obs_prime = [random.uniform(0, ttp1_obs), random.uniform(0, ttp2_obs), 0]  # trailing 0 since no attacker is not observable
+            ttp1_obs = random.random()
+            ttp2_obs = random.random()
 
-        model.active_measure_not_noticed = [random.random() for x in range(num_ttps)]
-        model.active_measure_not_noticed.append(1)  # append 1 since no attacker cant notice
+            model = ModelExtendedGen(ttp1_obs, ttp2_obs, horizon=timesteps)
+            # all ttps have 0 appropriateness for the no attacker case
+            appropriateness = [[random.random() if y < num_attackers else 0 for x in range(num_ttps)] for y in range(num_attackers+1)]
+            model.technique_appropriateness = appropriateness
 
-        # assumption, disruptivness can be between 1, 10
-        model.attacker_disruptiveness = [random.uniform(1, 10) for x in range(num_attackers)]
-        model.attacker_disruptiveness.append(0)  # append 0 since no attacker type is not disruptive
+            model.active_measure_obs_prime = [random.uniform(0, ttp1_obs), random.uniform(0, ttp2_obs), 0]  # trailing 0 since no attacker is not observable
 
-        # assumption cost can be at most 1 ### OLD VALUE: timesteps * max disruptiveness
-        max_disrupt = max(model.attacker_disruptiveness)
-        model.a_evict_cost = [random.random() for x in range(num_ttps)]
-        model.a_evict_cost.append(0)  # append 0 since pass tactic has no cost
+            model.active_measure_not_noticed = [random.random() for x in range(num_ttps)]
+            model.active_measure_not_noticed.append(1)  # append 1 since no attacker cant notice
 
-        model.active_measure_cost = random.random()
+            # assumption, disruptivness can be between 1, 10
+            model.attacker_disruptiveness = [random.uniform(1, 10) for x in range(num_attackers)]
+            model.attacker_disruptiveness.append(0)  # append 0 since no attacker type is not disruptive
 
-        priors = rand_priors(num_attackers+1)
+            # assumption cost can be at most 1 ### OLD VALUE: timesteps * max disruptiveness
+            max_disrupt = max(model.attacker_disruptiveness)
+            model.a_evict_cost = [random.random() for x in range(num_ttps)]
+            model.a_evict_cost.append(0)  # append 0 since pass tactic has no cost
 
-        go_nash = go_stackelberg = True
+            model.active_measure_cost = random.random()
 
-        if len(args) > 1:
-            if args[1] == "nash":
-                go_stackelberg = False
-            elif args[1] == "stackelberg":
-                go_nash = False
-            else:
-                print("Invalid Arg")
-                sys.exit()
+            priors = rand_priors(num_attackers+1)
 
-        strategies_p1 = num_ttps ** num_attackers
-        # strategies_p2 = timesteps*num_ttps
-        strategies_p2 = ((timesteps ** 2 + timesteps) // 2) * (num_attackers + 1)  # plus one for pass tactic case
+            go_nash = go_stackelberg = True
 
-        if go_nash:
-            nash_solution = get_solution_from_model(model, p_t1=priors[0], p_t2=priors[1], p_na=priors[2])
+            if len(args) > 1:
+                if args[1] == "nash":
+                    go_stackelberg = False
+                elif args[1] == "stackelberg":
+                    go_nash = False
+                else:
+                    print("Invalid Arg")
+                    sys.exit()
 
-            for solution in nash_solution:
-                print_nash_sol(solution, model, priors, strategies_p1, strategies_p2, len(nash_solution))
+            strategies_p1 = num_ttps ** num_attackers
+            # strategies_p2 = timesteps*num_ttps
+            strategies_p2 = ((timesteps ** 2 + timesteps) // 2) * (num_attackers + 1)  # plus one for pass tactic case
 
-        if go_stackelberg:
-            stackelberg_solution = get_stackelberg_from_model(model, t1_prior=priors[0], t2_prior=priors[1], tn_prior=priors[2])
-            print_model(model)
-            sys.stdout.write(str(priors[0])+","+str(priors[1])+","+str(priors[2])+",stackelberg,1,")
-            ans = [v.x for v in stackelberg_solution.getVars()]
-            ans.append(stackelberg_solution.objVal)
-            lines = ""
-            for s in range(strategies_p1 + strategies_p2):
-                if 0 <= s < 4:
-                    s += 9
-                elif 3 < s < 13:
-                    s -= 4
-                lines += str(ans[s]) + ","
-            lines += str(ans[strategies_p1 + strategies_p2])
-            sys.stdout.write(lines)
-            sys.stdout.write("\n")
+            if go_nash:
+                nash_solution = get_solution_from_model(model, p_t1=priors[0], p_t2=priors[1], p_na=priors[2])
+
+                for solution in nash_solution:
+                    print_nash_sol(solution, model, priors, strategies_p1, strategies_p2, len(nash_solution))
+
+            if go_stackelberg:
+                stackelberg_solution = get_stackelberg_from_model(model, t1_prior=priors[0], t2_prior=priors[1], tn_prior=priors[2])
+                print_model(model)
+                sys.stdout.write(str(priors[0])+","+str(priors[1])+","+str(priors[2])+",stackelberg,1,")
+                ans = [v.x for v in stackelberg_solution.getVars()]
+                ans.append(stackelberg_solution.objVal)
+                lines = ""
+                for s in range(strategies_p1 + strategies_p2):
+                    if 0 <= s < 4:
+                        s += 9
+                    elif 3 < s < 13:
+                        s -= 4
+                    lines += str(ans[s]) + ","
+                lines += str(ans[strategies_p1 + strategies_p2])
+                sys.stdout.write(lines)
+                sys.stdout.write("\n")
 
     # print (time.time() - start)
 
