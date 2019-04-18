@@ -5,7 +5,8 @@ from decimal import *
 from extended_model_gen import ModelExtendedGen
 
 
-def get_solution_from_model(model, timesteps=2, p_t1=0.33, p_t2=0.33, p_na=0.33, num_attackers=2, num_ttps=2):
+def get_solution_from_model(model, p_t1=0.33, p_t2=0.33, p_na=0.33, num_attackers=2, num_ttps=2):
+    timesteps = model.horizon
     strategies_p1 = num_ttps ** num_attackers
     strategies_p2 = ((timesteps ** 2 + timesteps) // 2) * (num_attackers + 1)  # num_attackers+1 is nessissary for handleing pass tactic case
 
