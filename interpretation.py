@@ -87,16 +87,16 @@ def main(args):
         model.active_measure_not_noticed = [random.random() for x in range(num_ttps)]
         model.active_measure_not_noticed.append(1)  # append 1 since no attacker cant notice
 
-        # assumption, disruptivness can be between 0, 10
-        model.attacker_disruptiveness = [random.uniform(0, 10) for x in range(num_attackers)]
+        # assumption, disruptivness can be between 1, 10
+        model.attacker_disruptiveness = [random.uniform(1, 10) for x in range(num_attackers)]
         model.attacker_disruptiveness.append(0)  # append 0 since no attacker type is not disruptive
 
-        # assumption cost can be at most timesteps * max disruptiveness
+        # assumption cost can be at most 1 ### OLD VALUE: timesteps * max disruptiveness
         max_disrupt = max(model.attacker_disruptiveness)
-        model.a_evict_cost = [random.uniform(0, timesteps*max_disrupt) for x in range(num_ttps)]
+        model.a_evict_cost = [random.random() for x in range(num_ttps)]
         model.a_evict_cost.append(0)  # append 0 since pass tactic has no cost
 
-        model.active_measure_cost = random.uniform(0, timesteps*max_disrupt)
+        model.active_measure_cost = random.random()
 
         priors = rand_priors(num_attackers+1)
 
