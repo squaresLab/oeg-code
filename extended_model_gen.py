@@ -18,26 +18,26 @@ class ModelExtendedGen(ModelExtended):
     def disruptiveness(self, t):
         return self.attacker_disruptiveness[t-1]
 
-    # # old defense cost function before conditional evict on waits
-    # def defense_cost(self, a, wait, blind_evict, active_measure=-1):
-    #     cost = 0
-    #
-    #     # if not exposed and not active measure failed, pay blind eviction cost
-    #     cost += self.evict_chance * self.a_evict_cost[blind_evict - 1]
-    #
-    #     # if exposed, pay attackers a evict cost
-    #     # TODO unless the cost to evict is higher than the cost to allow to remain
-    #     exposed_chance = 1 - self.evict_chance - self.active_measure_failed
-    #     cost += exposed_chance * self.a_evict_cost[a - 1]
-    #
-    #     # if active measure used, pay its use cost
-    #     if active_measure >= 0:
-    #         if self.active_measure_failed == 0 and self.evict_chance == 1:
-    #             cost += self.active_measure_cost
-    #         else:
-    #             cost += (self.active_measure_failed / (1-self.active_measure_missed(a))) * self.active_measure_cost
-    #
-    #     return cost
+    # old defense cost function before conditional evict on waits
+    def defense_cost(self, a, wait, blind_evict, active_measure=-1):
+        cost = 0
+
+        # if not exposed and not active measure failed, pay blind eviction cost
+        cost += self.evict_chance * self.a_evict_cost[blind_evict - 1]
+
+        # if exposed, pay attackers a evict cost
+        # TODO unless the cost to evict is higher than the cost to allow to remain
+        exposed_chance = 1 - self.evict_chance - self.active_measure_failed
+        cost += exposed_chance * self.a_evict_cost[a - 1]
+
+        # if active measure used, pay its use cost
+        if active_measure >= 0:
+            if self.active_measure_failed == 0 and self.evict_chance == 1:
+                cost += self.active_measure_cost
+            else:
+                cost += (self.active_measure_failed / (1-self.active_measure_missed(a))) * self.active_measure_cost
+
+        return cost
 
     # def defense_cost(self, a, wait, blind_evict, t, active_measure=-1):
     #     # sum over each timestep
