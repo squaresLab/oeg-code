@@ -36,8 +36,8 @@ print(post_proc_header)
 non_actions = 28
 attacker_actions = 4
 
-# filename = "/home/ckinneer/PycharmProjects/apt-code/interp_results/out.nash.merged.csv"
-filename = "/home/ckinneer/PycharmProjects/apt-code/interp_results/out.stackelberg.0.csv"
+filename = "/home/ckinneer/PycharmProjects/apt-code/interp_results/new_data_analysis/out.nash.merged.csv"
+# filename = "/home/ckinneer/PycharmProjects/apt-code/interp_results/out.stackelberg.0.csv"
 
 with open(filename) as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=",")
