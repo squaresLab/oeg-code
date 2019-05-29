@@ -11,7 +11,8 @@ class ModelExtended(object):
         self.active_measure_not_noticed = [0.1, 0.9, 0.5]  # not noticed by the attacker
         self.active_measure_obs_prime = [0.855, 0.095, 0.45]
         self.technique_appropriateness = [[1, 0.5],
-                                          [0.5, 1]]
+                                          [0.5, 1],
+                                          [0, 0]]
 
     def technique_fit(self, t, a):
         return self.technique_appropriateness[t-1][a-1]
