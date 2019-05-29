@@ -119,7 +119,7 @@ def getMixedStrategyProfile(timesteps=2, p_t1=0.33, p_t2=0.33, p_na=0.33, ttp1_o
 
 
 def main():
-    timesteps=50
+    timesteps=2
     num_attackers = 2
     num_ttps = 2
 
